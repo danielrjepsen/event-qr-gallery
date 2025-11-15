@@ -1,4 +1,3 @@
-// Infrastructure/Persistence/Extensions/EventMappingExtensions.cs (NEW FILE)
 using Nory.Core.Domain.Entities;
 using Nory.Infrastructure.Persistence.Models;
 
@@ -9,17 +8,17 @@ public static class EventMappingExtensions
     // DbModel -> Domain
     public static Event MapToDomain(this EventDbModel dbModel)
     {
-        return Event.FromPersistence(
-            dbModel.Id,
-            dbModel.Name,
-            dbModel.Description,
-            dbModel.StartsAt,
-            dbModel.EndsAt,
-            dbModel.Status,
-            dbModel.HasContent,
-            dbModel.CreatedAt,
-            dbModel.UpdatedAt
-        );
+        var eventEntity = new Event(dbModel.Name, dbModel.StartsAt, dbModel.EndsAt)
+        {
+            Id = dbModel.Id,
+            Status = dbModel.Status,
+            Description = dbModel.Description,
+            HasContent = dbModel.HasContent,
+            CreatedAt = dbModel.CreatedAt,
+            UpdatedAt = dbModel.UpdatedAt,
+        };
+
+        return eventEntity;
     }
 
     // Domain -> DbModel

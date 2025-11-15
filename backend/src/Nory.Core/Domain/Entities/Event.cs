@@ -4,20 +4,18 @@ using Nory.Core.Domain.Enums;
 
 public class Event
 {
-    public Guid Id { get; private set; }
-    public string Name { get; private set; }
-    public string? Description { get; private set; }
-    public DateTime? StartsAt { get; private set; }
-    public DateTime? EndsAt { get; private set; }
-    public EventStatus Status { get; private set; }
-    public bool HasContent { get; private set; }
-    public DateTime CreatedAt { get; private set; }
-    public DateTime UpdatedAt { get; private set; }
+    public Guid Id { get; internal set; }
+    public string Name { get; internal set; }
+    public string? Description { get; internal set; }
+    public DateTime? StartsAt { get; internal set; }
+    public DateTime? EndsAt { get; internal set; }
+    public EventStatus Status { get; internal set; }
+    public bool HasContent { get; internal set; }
+    public DateTime CreatedAt { get; internal set; }
+    public DateTime UpdatedAt { get; internal set; }
 
     private readonly List<Photo> _photos = new();
     public IReadOnlyCollection<Photo> Photos => _photos.AsReadOnly();
-
-    private Event() { }
 
     public Event(string name, DateTime? startsAt, DateTime? endsAt)
     {

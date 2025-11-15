@@ -17,6 +17,10 @@ public class ApplicationDbContext : IdentityDbContext<UserDbModel, IdentityRole<
     public DbSet<EventAppDbModel> EventApps { get; set; }
     public DbSet<AppTypeDbModel> AppTypes { get; set; }
 
+    // Analytics entities
+    public DbSet<ActivityLogDbModel> ActivityLogs { get; set; }
+    public DbSet<EventMetricsDbModel> EventMetrics { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -27,6 +31,10 @@ public class ApplicationDbContext : IdentityDbContext<UserDbModel, IdentityRole<
         builder.Entity<EventCategoryDbModel>().ToTable("EventCategories");
         builder.Entity<EventAppDbModel>().ToTable("EventApps");
         builder.Entity<AppTypeDbModel>().ToTable("AppTypes");
+
+        // Analytics tables
+        builder.Entity<ActivityLogDbModel>().ToTable("ActivityLogs");
+        builder.Entity<EventMetricsDbModel>().ToTable("EventMetrics");
 
         // indexes
         builder
@@ -43,6 +51,27 @@ public class ApplicationDbContext : IdentityDbContext<UserDbModel, IdentityRole<
             .Entity<EventAppDbModel>()
             .HasIndex(ea => ea.EventId)
             .HasDatabaseName("IX_EventApps_EventId");
+
+        // Analytics indexes
+        builder
+            .Entity<ActivityLogDbModel>()
+            .HasIndex(a => a.EventId)
+            .HasDatabaseName("IX_ActivityLogs_EventId");
+
+        builder
+            .Entity<ActivityLogDbModel>()
+            .HasIndex(a => new { a.EventId, a.Type })
+            .HasDatabaseName("IX_ActivityLogs_EventId_Type");
+
+        builder
+            .Entity<ActivityLogDbModel>()
+            .HasIndex(a => a.CreatedAt)
+            .HasDatabaseName("IX_ActivityLogs_CreatedAt");
+
+        builder
+            .Entity<EventMetricsDbModel>()
+            .HasIndex(m => new { m.EventId, m.PeriodType })
+            .HasDatabaseName("IX_EventMetrics_EventId_PeriodType");
 
         // relationships
         builder
@@ -65,5 +94,24 @@ public class ApplicationDbContext : IdentityDbContext<UserDbModel, IdentityRole<
             .WithOne(ea => ea.Event)
             .HasForeignKey(ea => ea.EventId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        // Analytics relationships
+        builder
+            .Entity<ActivityLogDbModel>()
+            .HasOne(a => a.Event)
+            .WithMany()
+            .HasForeignKey(a => a.EventId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .Entity<EventMetricsDbModel>()
+            .HasOne(m => m.Event)
+            .WithMany()
+            .HasForeignKey(m => m.EventId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Entity<ActivityLogDbModel>().Property(a => a.Data).HasColumnType("jsonb");
+
+        builder.Entity<EventMetricsDbModel>().Property(m => m.FeatureUsage).HasColumnType("jsonb");
     }
 }

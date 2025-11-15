@@ -1,6 +1,8 @@
+using Nory.Application.DTOs;
+
 public class DashboardOverviewDto
 {
-    public List<EventSummaryDto> Events { get; set; } = new();
-    public OrgAnalyticsSummaryDto Analytics { get; set; } = new();
-    public List<ActivitySummaryDto> RecentActivity { get; set; } = new();
+    public List<EventDto> Events { get; set; } = new();
+    public AggregatedEventMetricsDto Analytics { get; set; } = new();
+    public List<ActivityLogDto> RecentActivities { get; set; } = new();
 }
