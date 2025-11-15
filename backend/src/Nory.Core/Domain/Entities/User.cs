@@ -1,24 +1,13 @@
+// Core/Domain/Entities/User.cs
+using Microsoft.AspNetCore.Identity;
+
 namespace Nory.Core.Domain.Entities;
 
-public class User
+public class User : IdentityUser
 {
-    public Guid Id { get; private set; }
-    public string Email { get; private set; }
-    public string Name { get; private set; }
-    public string Locale { get; private set; }
-    public DateTime CreatedAt { get; private set; }
-
-    private User() { }
-
-    public User(string email, string name, string locale = "en")
-    {
-        if (string.IsNullOrWhiteSpace(email))
-            throw new ArgumentException("Email is required");
-
-        Id = Guid.NewGuid();
-        Email = email;
-        Name = name;
-        Locale = locale;
-        CreatedAt = DateTime.UtcNow;
-    }
+    public string Name { get; set; } = string.Empty;
+    public string Locale { get; set; } = "en";
+    public string? ProfilePicture { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
 }
